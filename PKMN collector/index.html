@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Pokemon Collector</title>
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#ff6b81">
+
+<style>
+
+body{
+font-family:Arial;
+background:#f5f5f5;
+text-align:center;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,150px);
+gap:12px;
+justify-content:center;
+padding:20px;
+}
+
+.card{
+background:white;
+padding:10px;
+border-radius:10px;
+box-shadow:0 2px 6px rgba(0,0,0,0.15);
+}
+
+.card img{
+width:100px;
+}
+
+button{
+margin:3px;
+padding:5px 8px;
+cursor:pointer;
+border:none;
+border-radius:6px;
+font-size:12px;
+}
+
+.love{background:#ff6b81;color:white;}
+.interest{background:#feca57;}
+.export{background:#576574;color:white;}
+.tcg{background:#54a0ff;color:white;}
+.merch{background:#10ac84;color:white;}
+
+input,select{
+padding:7px;
+margin:5px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>My Pokémon Collector</h1>
+
+<button class="export" onclick="exportAll()">Export My List</button>
+
+<br>
+
+<input id="search" placeholder="Search Pokémon" onkeyup="searchPokemon()">
+
+<h2>All Pokémon</h2>
+<div id="pokemonList" class="grid"></div>
+
+<h2>❤️ Loved</h2>
+<div id="lovedList" class="grid"></div>
+
+<h2>⭐ Interested</h2>
+<div id="interestedList" class="grid"></div>
+
+<script>
+
+let loved = JSON.parse(localStorage.getItem("loved")) || []
+let interested = JSON.parse(localStorage.getItem("interested")) || []
+
+function save(){
+localStorage.setItem("loved",JSON.stringify(loved))
+localStorage.setItem("interested",JSON.stringify(interested))
+}
+
+async function loadPokemon(){
+
+const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1025")
+const data = await res.json()
+
+const container = document.getElementById("pokemonList")
+
+data.results.forEach((p,i)=>{
+
+const id = i+1
+const img=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`
+
+const card=document.createElement("div")
+card.className="card"
+card.setAttribute("data-name",p.name)
+
+card.innerHTML=`
+<b>${p.name}</b><br>
+<img src="${img}"><br>
+
+<button class="love" onclick="love('${p.name}','${img}')">❤️</button>
+<button class="interest" onclick="interest('${p.name}','${img}')">⭐</button>
+
+<br>
+
+<button class="tcg" onclick="openTCG('${p.name}')">TCG</button>
+<button class="merch" onclick="openMerch('${p.name}')">Merch</button>
+`
+
+container.appendChild(card)
+
+})
+
+}
+
+function love(name,img){
+if(!loved.find(p=>p.name==name)){
+loved.push({name,img})
+save()
+render()
+}
+}
+
+function interest(name,img){
+if(!interested.find(p=>p.name==name)){
+interested.push({name,img})
+save()
+render()
+}
+}
+
+function render(){
+
+const l=document.getElementById("lovedList")
+const i=document.getElementById("interestedList")
+
+l.innerHTML=""
+i.innerHTML=""
+
+loved.forEach(p=>{
+l.innerHTML+=`
+<div class="card">
+<b>${p.name}</b><br>
+<img src="${p.img}">
+</div>`
+})
+
+interested.forEach(p=>{
+i.innerHTML+=`
+<div class="card">
+<b>${p.name}</b><br>
+<img src="${p.img}">
+</div>`
+})
+
+}
+
+function searchPokemon(){
+
+const term=document.getElementById("search").value.toLowerCase()
+const cards=document.querySelectorAll("#pokemonList .card")
+
+cards.forEach(c=>{
+const name=c.getAttribute("data-name")
+c.style.display=name.includes(term)?"block":"none"
+})
+
+}
+
+function openTCG(name){
+window.open(`https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/?cardName=${name}`)
+}
+
+function openMerch(name){
+window.open(`https://www.pokemoncenter.com/search/${name}`)
+}
+
+function exportAll(){
+
+let text="My Pokémon Collector\n\n"
+
+text+="❤️ Loved\n"
+loved.forEach(p=>{text+="- "+p.name+"\n"})
+
+text+="\n⭐ Interested\n"
+interested.forEach(p=>{text+="- "+p.name+"\n"})
+
+const element=document.createElement("a")
+element.href="data:text/plain;charset=utf-8,"+encodeURIComponent(text)
+element.download="pokemon_list.txt"
+element.click()
+
+}
+
+loadPokemon()
+render()
+
+</script>
+
+<script>
+
+if ("serviceWorker" in navigator) {
+navigator.serviceWorker.register("service-worker.js")
+}
+
+</script>
+
+</body>
+</html>
