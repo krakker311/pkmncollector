@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pokemon Collector</title>
 
 <link rel="manifest" href="manifest.json">
@@ -9,52 +9,72 @@
 <meta name="theme-color" content="#ff6b81">
 
 <style>
-
 body{
-font-family:Arial;
-background:#f5f5f5;
-text-align:center;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    text-align: center;
+    -webkit-font-smoothing: antialiased; 
 }
 
 .grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,150px);
-gap:12px;
-justify-content:center;
-padding:20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    justify-content: center;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box; 
 }
-
+  
 .card{
-background:white;
-padding:10px;
-border-radius:10px;
-box-shadow:0 2px 6px rgba(0,0,0,0.15);
+    background: white;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 140px;
+    box-sizing: border-box; 
 }
-
 .card img{
-width:100px;
+    width: 100%;
+    max-width: 180px;
+    height: auto;
+    margin: 8px 0;
+    display: block;
 }
 
 button{
-margin:3px;
-padding:5px 8px;
-cursor:pointer;
-border:none;
-border-radius:6px;
-font-size:12px;
+    margin: 6px 4px;
+    padding: 10px 12px;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    min-height: 44px;
+    min-width: 44px;
 }
 
-.love{background:#ff6b81;color:white;}
-.interest{background:#feca57;}
-.export{background:#576574;color:white;}
-.tcg{background:#54a0ff;color:white;}
-.merch{background:#10ac84;color:white;}
-
+.love{background:#ff6b81;color:white;} 
+.interest{background:#feca57;} 
+.export{background:#576574;color:white;} 
+.tcg{background:#54a0ff;color:white;} 
+.merch{background:#10ac84;color:white;} 
+  
 input,select{
-padding:7px;
-margin:5px;
-}
+    padding:7px;
+    margin:5px; 
+  }
 
+@media (max-width: 480px){
+    .grid{ grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap:14px; padding:16px; }
+    .card{ padding:14px; min-width:160px; }
+    .card img{ max-width:200px; }
+    button{ padding:12px 14px; font-size:15px; min-height:48px; }
+}
+  
 </style>
 </head>
 
@@ -215,5 +235,6 @@ navigator.serviceWorker.register("service-worker.js")
 </script>
 
 </body>
+
 
 </html>
