@@ -177,11 +177,25 @@ function render(){
     const i=document.getElementById("interestedList")
     l.innerHTML=""
     i.innerHTML=""
+
     loved.forEach(p=>{
-        l.innerHTML+=`<div class="card"><b>${p.name}</b><br><img src="${p.img}"></div>`
+        l.innerHTML+=`
+        <div class="card">
+            <b>${p.name}</b><br>
+            <img src="${p.img}"><br>
+            <button class="tcg" onclick="openTCG('${p.name}')">🎴 TCG</button>
+            <button class="merch" onclick="openMerch('${p.name}')">🛍 Merch</button>
+        </div>`
     })
+
     interested.forEach(p=>{
-        i.innerHTML+=`<div class="card"><b>${p.name}</b><br><img src="${p.img}"></div>`
+        i.innerHTML+=`
+        <div class="card">
+            <b>${p.name}</b><br>
+            <img src="${p.img}"><br>
+            <button class="tcg" onclick="openTCG('${p.name}')">🎴 TCG</button>
+            <button class="merch" onclick="openMerch('${p.name}')">🛍 Merch</button>
+        </div>`
     })
 }
 
@@ -241,3 +255,4 @@ if ("serviceWorker" in navigator) {
 
 </body>
 </html>
+
